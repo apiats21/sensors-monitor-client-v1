@@ -42,18 +42,18 @@ export class LoginComponent implements OnInit, OnDestroy {
         },
         (errorResponse: HttpErrorResponse) => {
           console.log(errorResponse);
-          this.sendErrorNotification(NotificationType.ERROR, errorResponse.message);
+          this.sendErrorNotification(NotificationType.ERROR, errorResponse.error.message);
           this.showLoading = false;
         }
       )
     );
   }
 
-  private sendErrorNotification(notificationType: NotificationType, message: string) {
+  private sendErrorNotification(notificationType: NotificationType, message: string): void {
     if (message) {
       this.notificationService.notify(notificationType, message);
     } else {
-      this.notificationService.notify(notificationType, 'AN ERROR OCCURED. PLEASE TRY AGAIN');
+      this.notificationService.notify(notificationType, 'An error occured. Please try again.');
     }
   }
 
