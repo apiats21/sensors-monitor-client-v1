@@ -14,12 +14,13 @@
    <div class="collapse navbar-collapse" id="navbarColor02">
       <ul class="navbar-nav mr-auto">
          <li class="nav-item active">
-            <a class="nav-link" (click)="onOpenModal(null, 'add')">Add Sensor <span class="sr-only">(current)</span></a>
+            <a class="nav-link" [hidden]="!isAdmin" (click)="onOpenModal(null, 'add')">Add Sensor <span
+                  class="sr-only">(current)</span></a>
          </li>
          <a class="nav-item nav-link ml-3" data-toggle="tab" routerLink="/user/management">
             <i class="fa fa-user-circle"></i>
             Users
-          </a>
+         </a>
       </ul>
       <form class="form-inline my-2 my-lg-0">
          <input type="search" (ngModelChange)="searchSensors(key.value)" #key="ngModel" ngModel name="key"
@@ -46,24 +47,25 @@
                      </tr>
                   </thead>
                   <tbody>
-                     <!-- <tr *ngFor="let sensor of sensors | slice: (page-1) * pageSize : page * pageSize"> -->
-                     <tr *ngFor="let sensor of sensors">
-                        <td><a href="#" class="text-body">{{sensor.name}}</a></td>
-                        <td><a href="#" class="text-body">{{sensor.model}}</a></td>
-                        <td><a href="#" class="text-body">{{sensor.type}}</a></td>
-                        <td><a href="#" class="text-body">{{sensor.rangeFrom}}-{{sensor.rangeTo}}</a></td>
+
+                     <tr *ngFor="let sensor of sensors | slice: (page-1) * pageSize : page * pageSize" 
+                     style="border-bottom:1px solid rgb(0, 0, 0)">
+                        <td><a class="text-body" data-toggle="tooltip" title={{sensor.description}} >{{sensor.name}}</a></td>
+                        <td><a class="text-body">{{sensor.model}}</a></td>
+                        <td><a class="text-body">{{sensor.type}}</a></td>
+                        <td><a class="text-body">{{sensor.rangeFrom}}-{{sensor.rangeTo}}</a></td>
                         <td></td>
-                        <td><a href="#" class="text-body">{{sensor.unit}}</a></td>
-                        <td><a href="#" class="text-body">{{sensor.location}}</a></td>
+                        <td><a class="text-body">{{sensor.unit}}</a></td>
+                        <td><a class="text-body">{{sensor.location}}</a></td>
                         <td>
                            <ul class="list-inline mb-0">
                               <li class="list-inline-item">
-                                 <a (click)="onOpenModal(sensor, 'edit')" data-bs-toggle="tooltip"
+                                 <a (click)="onOpenModal(sensor, 'edit')" [hidden]="!isAdmin" data-bs-toggle="tooltip"
                                     data-bs-placement="top" title="Edit" class="px-2 text-primary"><i
                                        class="bx bx-pencil font-size-18"></i></a>
                               </li>
                               <li class="list-inline-item">
-                                 <a (click)="onOpenModal(sensor, 'delete')" data-bs-toggle="tooltip"
+                                 <a (click)="onOpenModal(sensor, 'delete')" [hidden]="!isAdmin" data-bs-toggle="tooltip"
                                     data-bs-placement="top" title="Delete" class="px-2 text-danger"><i
                                        class="bx bx-trash-alt font-size-18"></i></a>
                               </li>
@@ -72,7 +74,7 @@
                      </tr>
                   </tbody>
                </table>
-               <!-- <ngb-pagination [(page)]="page" [pageSize]="pageSize" [collectionSize]="sensors?.length"></ngb-pagination> -->
+               <ngb-pagination [(page)]="page" [pageSize]="pageSize" [collectionSize]="sensors?.length"></ngb-pagination>
             </div>
          </div>
       </div>
@@ -93,45 +95,58 @@
          <div class="modal-body">
             <form #addForm="ngForm" (ngSubmit)="onAddSensor(addForm)">
                <div class="form-group">
-                  <label for="name">Name</label>
-                  <input type="text" ngModel name="name" class="form-control" id="name" placeholder="Name" required>
+                  <label for="name">Name *</label>
+                  <input type="text" ngModel name="name" class="form-control" id="name" placeholder="Name" 
+                  #sensorNameInput="ngModel" required maxlength="30">
                </div>
+               <span class="help-block" style="color:red;"
+               *ngIf="sensorNameInput.invalid && sensorNameInput.touched">Please enter a sensor name</span>
                <div class="form-group">
-                  <label for="model">Model</label>
-                  <input type="text" ngModel name="model" class="form-control" id="model" placeholder="Model" required>
+                  <label for="model">Model *</label>
+                  <input type="text" ngModel name="model" class="form-control" id="model" placeholder="Model" 
+                  #sensorModelInput="ngModel" required maxlength="15">
                </div>
+               <span class="help-block" style="color:red;"
+               *ngIf="sensorModelInput.invalid && sensorModelInput.touched">Please enter a sensor model</span>
                <div class="form-group">
-                  <label for="type">Type</label>
-                  <input type="text" ngModel name="type" class="form-control" id="type" placeholder="type" required>
+                  <label for="type">Type *</label>
+                  <select name="type" required ngModel="ROLE_USER" class="form-control">
+                     <option value="PRESSURE">PRESSURE</option>
+                     <option value="VOLTAGE">VOLTAGE</option>
+                     <option value="TEMPERATURE">TEMPERATURE</option>
+                     <option value="HUMIDITY">HUMIDITY</option>
+                  </select>
                </div>
                <div class="form-group">
                   <label for="rangeFrom">Range from</label>
                   <input type="number" ngModel name="rangeFrom" class="form-control" id="rangeFrom"
-                     placeholder="rangeFrom" required>
+                     placeholder="rangeFrom">
                </div>
                <div class="form-group">
                   <label for="rangeTo">Range to</label>
-                  <input type="number" ngModel name="rangeTo" class="form-control" id="rangeTo" placeholder="rangeTo"
-                     required>
+                  <input type="number" ngModel name="rangeTo" class="form-control" id="rangeTo" placeholder="rangeTo">
                </div>
                <div class="form-group">
-                  <label for="unit">Unit</label>
-                  <input type="text" ngModel name="unit" class="form-control" id="unit" placeholder="unit" required>
+                  <label for="unit">Unit * </label>
+                  <select name="unit" required ngModel="ROLE_USER" class="form-control">
+                     <option value="BAR">BAR</option>
+                     <option value="VOLTAGE">VOLTAGE</option>
+                     <option value="CELSIUS">CELSIUS</option>
+                     <option value="PERCENTAGE">PERCENTAGE</option>
+                  </select>
                </div>
                <div class="form-group">
                   <label for="location">Location</label>
-                  <input type="text" ngModel name="location" class="form-control" id="location" placeholder="location"
-                     required>
+                  <input type="text" ngModel name="location" class="form-control" id="location" placeholder="location" maxlength="40">
                </div>
                <div class="form-group">
                   <label for="description">Description</label>
-                  <input type="text" ngModel name="description" class="form-control" id="description"
-                     placeholder="description" required>
+                  <input type="text" ngModel name="description" class="form-control" id="description" placeholder="description" maxlength="200">
                </div>
                <div class="modal-footer">
                   <button type="button" id="add-sensor-form" class="btn btn-secondary"
                      data-dismiss="modal">Close</button>
-                  <button type="submit" class="btn btn-primary">Save changes</button>
+                  <button type="submit" [disabled]="addForm.invalid" class="btn btn-primary">Save changes</button>
                </div>
             </form>
          </div>
@@ -158,7 +173,7 @@
                      aria-describedby="emailHelp" placeholder="Name">
                </div>
                <input type="hidden" ngModel="{{editSensor?.id}}" name="id" class="form-control" id="id"
-                  placeholder="Email">
+                  placeholder="Id">
                <div class="form-group">
                   <label for="model">Model</label>
                   <input type="text" ngModel="{{editSensor?.model}}" name="model" class="form-control" id="model"
@@ -166,8 +181,12 @@
                </div>
                <div class="form-group">
                   <label for="type">Type</label>
-                  <input type="text" ngModel="{{editSensor?.type}}" name="type" class="form-control" id="type"
-                     placeholder="Type">
+                  <select name="type" required ngModel="{{editSensor?.type}}" class="form-control">
+                     <option value="PRESSURE">PRESSURE</option>
+                     <option value="VOLTAGE">VOLTAGE</option>
+                     <option value="TEMPERATURE">TEMPERATURE</option>
+                     <option value="HUMIDITY">HUMIDITY</option>
+                  </select>
                </div>
                <div class="form-group">
                   <label for="rangeFrom">Range from</label>
@@ -181,8 +200,12 @@
                </div>
                <div class="form-group">
                   <label for="unit">Unit</label>
-                  <input type="text" ngModel="{{editSensor?.unit}}" name="unit" class="form-control" id="unit"
-                     placeholder="Unit">
+                  <select name="unit" required ngModel="{{editSensor?.unit}}" class="form-control">
+                     <option value="BAR">BAR</option>
+                     <option value="VOLTAGE">VOLTAGE</option>
+                     <option value="CELSIUS">CELSIUS</option>
+                     <option value="PERCENTAGE">PERCENTAGE</option>
+                  </select>
                </div>
                <div class="form-group">
                   <label for="location">Location</label>

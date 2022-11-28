@@ -16,6 +16,8 @@ import { RegisterComponent } from './register/register.component';
 import { UserComponent } from './user/user.component';
 import { RouterModule } from '@angular/router';
 import { SensorComponent } from './sensor/sensor.component';
+import { CustomFormsModule } from 'ng2-validation';
+import { NgbModule } from '@ng-bootstrap/ng-bootstrap';
 
 
 @NgModule({
@@ -32,7 +34,9 @@ import { SensorComponent } from './sensor/sensor.component';
     FormsModule,
     HttpClientModule,
     NotificationModule,
-    RouterModule
+    RouterModule,
+    CustomFormsModule,
+    NgbModule
   ],
   providers: [NotificationService, AuthenticationGuard, AuthenticationService, UserService,
     { provide: HTTP_INTERCEPTORS, useClass: AuthInterceptor, multi: true } ],

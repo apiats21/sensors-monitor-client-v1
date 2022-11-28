@@ -1,14 +1,16 @@
 import { Component, OnInit } from '@angular/core';
 import { SensorService } from '../service/sensor.service';
-import { BehaviorSubject, Subscription } from 'rxjs';
+import { Subscription } from 'rxjs';
 import { NotificationService } from '../service/notification.service';
 import { NotificationType } from '../enum/notification-type.enum';
 import { HttpErrorResponse, HttpEvent, HttpEventType } from '@angular/common/http';
 import { NgForm } from '@angular/forms';
-import { CustomHttpRespone } from '../model/custom-http-response';
 import { AuthenticationService } from '../service/authentication.service';
 import { Router } from '@angular/router';
 import { Sensor } from '../model/sensor';
+import { Role } from '../enum/role.enum';
+import { User } from '../model/user';
+import { UserService } from '../service/user.service';
 
 @Component({
   selector: 'app-sensor',
@@ -18,17 +20,20 @@ import { Sensor } from '../model/sensor';
 export class SensorComponent implements OnInit {
   private subscriptions: Subscription[] = [];
   public refreshing: boolean;
-  public sensors!: Sensor[]
+  public sensors!: Sensor[];
   public editSensor: Sensor;
   public deleteSensor: Sensor;
+  public page: number = 1;
+  public pageSize: number = 4;
+  public users: User[];
+  public user: User;
 
   constructor(private router: Router, private authenticationService: AuthenticationService,
-    private sensorService: SensorService, private notificationService: NotificationService) { }
+    private sensorService: SensorService, private userService: UserService, private notificationService: NotificationService) { }
 
   ngOnInit(): void {
     this.getSensors();
   }
-
 
   public getSensors(): void {
     this.sensorService.getSensors().subscribe(
@@ -80,27 +85,26 @@ export class SensorComponent implements OnInit {
     );
   }
 
-  public searchSensors(key: string): void { 
+  public searchSensors(key: string): void {
     const results: Sensor[] = [];
+
     for(const sensor of this.sensors) {
       console.log(key);
       if(sensor.name.toLowerCase().indexOf(key.toLowerCase()) !== -1
       || sensor.model.toLowerCase().indexOf(key.toLowerCase()) !== -1
       || sensor.type.toLowerCase().indexOf(key.toLowerCase()) !== -1
-      || sensor.rangeFrom.toString().indexOf(key.toLowerCase()) !== -1
-      || sensor.rangeTo.toString().indexOf(key.toLowerCase()) !== -1
       || sensor.unit.toLowerCase().indexOf(key.toLowerCase()) !== -1
-      || sensor.location.toLowerCase().indexOf(key.toLowerCase()) !== -1
-      || sensor.description.toLowerCase().indexOf(key.toLowerCase()) !== -1) {
+      || sensor.location != null && sensor.location.toLowerCase().indexOf(key.toLowerCase()) !== -1
+      || sensor.description != null && sensor.description.toLowerCase().indexOf(key.toLowerCase()) !== -1    
+      ) {
         results.push(sensor);
       }
     }
     this.sensors = results;
-    if (results.length == 0 || !key) {
+    if(results.length == 0 || !key) {
       this.getSensors();
-    }
+    }   
   }
-
 
   public onOpenModal(sensor: Sensor, mode: string): void {
     const container = document.getElementById('main-container')
@@ -123,26 +127,13 @@ export class SensorComponent implements OnInit {
     button.click();
   }
 
-  
-  // public getSensors(showNotification: boolean): void {
-  //   this.refreshing = true;
-  //   this.subscriptions.push(
-  //     this.sensorService.getUsers().subscribe(
-  //       (response: Sensor[]) => {
-  //         this.sensorService.addUsersToLocalCache(response);
-  //         this.users = response;
-  //         this.refreshing = false;
-  //         if (showNotification) {
-  //           this.sendNotification(NotificationType.SUCCESS, `${response.length} user(s) loaded successfully.`);
-  //         }
-  //       },
-  //       (errorResponse: HttpErrorResponse) => {
-  //         this.sendNotification(NotificationType.ERROR, errorResponse.error.message);
-  //         this.refreshing = false;
-  //       }
-  //     )
-  //   );
-  // }
+  public get isAdmin(): boolean {
+    return this.getUserRole() === Role.ADMIN || this.getUserRole() === Role.SUPER_ADMIN;
+  }
+
+  private getUserRole(): string {
+    return this.authenticationService.getUserFromLocalCache().role;
+  }
 
   private sendNotification(notificationType: NotificationType, message: string): void {
     if (message) {
@@ -151,5 +142,4 @@ export class SensorComponent implements OnInit {
       this.notificationService.notify(notificationType, 'An error occurred. Please try again.');
     }
   }
-
 }
