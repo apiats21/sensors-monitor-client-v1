@@ -2,7 +2,6 @@ import { BrowserModule } from '@angular/platform-browser';
 import { NgModule } from '@angular/core';
 import { HttpClientModule, HTTP_INTERCEPTORS } from '@angular/common/http';
 import { FormsModule } from '@angular/forms';
-
 import { AppRoutingModule } from './app-routing.module';
 import { AppComponent } from './app.component';
 import { AuthenticationService } from './service/authentication.service';
@@ -18,7 +17,6 @@ import { RouterModule } from '@angular/router';
 import { SensorComponent } from './sensor/sensor.component';
 import { CustomFormsModule } from 'ng2-validation';
 import { NgbModule } from '@ng-bootstrap/ng-bootstrap';
-
 
 @NgModule({
   declarations: [
@@ -42,4 +40,5 @@ import { NgbModule } from '@ng-bootstrap/ng-bootstrap';
     { provide: HTTP_INTERCEPTORS, useClass: AuthInterceptor, multi: true } ],
   bootstrap: [AppComponent]
 })
+
 export class AppModule { }

@@ -9,17 +9,15 @@ export class Sensor {
     location: string;
     description: string;
 
-constructor() {
-    this.id = 0;
-    this.name = '';
-    this.model = '';
-    this.type = '';
-    this.rangeFrom = 0;
-    this.rangeTo = 0;
-    this.unit = '';
-    this.location = '';
-    this.description = '';
+    constructor() {
+        this.id = 0;
+        this.name = '';
+        this.model = '';
+        this.type = '';
+        this.rangeFrom = 0;
+        this.rangeTo = 0;
+        this.unit = '';
+        this.location = '';
+        this.description = '';
+    }
 }
-
-}
-

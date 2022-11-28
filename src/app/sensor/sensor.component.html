@@ -48,9 +48,10 @@
                   </thead>
                   <tbody>
 
-                     <tr *ngFor="let sensor of sensors | slice: (page-1) * pageSize : page * pageSize" 
-                     style="border-bottom:1px solid rgb(0, 0, 0)">
-                        <td><a class="text-body" data-toggle="tooltip" title={{sensor.description}} >{{sensor.name}}</a></td>
+                     <tr *ngFor="let sensor of sensors | slice: (page-1) * pageSize : page * pageSize"
+                        style="border-bottom:1px solid rgb(0, 0, 0)">
+                        <td><a class="text-body" data-toggle="tooltip" title={{sensor.description}}>{{sensor.name}}</a>
+                        </td>
                         <td><a class="text-body">{{sensor.model}}</a></td>
                         <td><a class="text-body">{{sensor.type}}</a></td>
                         <td><a class="text-body">{{sensor.rangeFrom}}-{{sensor.rangeTo}}</a></td>
@@ -74,7 +75,8 @@
                      </tr>
                   </tbody>
                </table>
-               <ngb-pagination [(page)]="page" [pageSize]="pageSize" [collectionSize]="sensors?.length"></ngb-pagination>
+               <ngb-pagination [(page)]="page" [pageSize]="pageSize" [collectionSize]="sensors?.length">
+               </ngb-pagination>
             </div>
          </div>
       </div>
@@ -96,18 +98,18 @@
             <form #addForm="ngForm" (ngSubmit)="onAddSensor(addForm)">
                <div class="form-group">
                   <label for="name">Name *</label>
-                  <input type="text" ngModel name="name" class="form-control" id="name" placeholder="Name" 
-                  #sensorNameInput="ngModel" required maxlength="30">
+                  <input type="text" ngModel name="name" class="form-control" id="name" placeholder="Name"
+                     #sensorNameInput="ngModel" required maxlength="30">
                </div>
                <span class="help-block" style="color:red;"
-               *ngIf="sensorNameInput.invalid && sensorNameInput.touched">Please enter a sensor name</span>
+                  *ngIf="sensorNameInput.invalid && sensorNameInput.touched">Please enter a sensor name</span>
                <div class="form-group">
                   <label for="model">Model *</label>
-                  <input type="text" ngModel name="model" class="form-control" id="model" placeholder="Model" 
-                  #sensorModelInput="ngModel" required maxlength="15">
+                  <input type="text" ngModel name="model" class="form-control" id="model" placeholder="Model"
+                     #sensorModelInput="ngModel" required maxlength="15">
                </div>
                <span class="help-block" style="color:red;"
-               *ngIf="sensorModelInput.invalid && sensorModelInput.touched">Please enter a sensor model</span>
+                  *ngIf="sensorModelInput.invalid && sensorModelInput.touched">Please enter a sensor model</span>
                <div class="form-group">
                   <label for="type">Type *</label>
                   <select name="type" required ngModel="ROLE_USER" class="form-control">
@@ -137,11 +139,13 @@
                </div>
                <div class="form-group">
                   <label for="location">Location</label>
-                  <input type="text" ngModel name="location" class="form-control" id="location" placeholder="location" maxlength="40">
+                  <input type="text" ngModel name="location" class="form-control" id="location" placeholder="location"
+                     maxlength="40">
                </div>
                <div class="form-group">
                   <label for="description">Description</label>
-                  <input type="text" ngModel name="description" class="form-control" id="description" placeholder="description" maxlength="200">
+                  <input type="text" ngModel name="description" class="form-control" id="description"
+                     placeholder="description" maxlength="200">
                </div>
                <div class="modal-footer">
                   <button type="button" id="add-sensor-form" class="btn btn-secondary"

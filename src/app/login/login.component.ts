@@ -18,7 +18,7 @@ export class LoginComponent implements OnInit, OnDestroy {
   private subscriptions: Subscription[] = [];
 
   constructor(private router: Router, private authenticationService: AuthenticationService,
-              private notificationService: NotificationService) {}
+    private notificationService: NotificationService) { }
 
   ngOnInit(): void {
     if (this.authenticationService.isUserLoggedIn()) {
@@ -58,5 +58,4 @@ export class LoginComponent implements OnInit, OnDestroy {
   ngOnDestroy(): void {
     this.subscriptions.forEach(sub => sub.unsubscribe());
   }
-
 }

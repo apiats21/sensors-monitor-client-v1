@@ -88,22 +88,22 @@ export class SensorComponent implements OnInit {
   public searchSensors(key: string): void {
     const results: Sensor[] = [];
 
-    for(const sensor of this.sensors) {
+    for (const sensor of this.sensors) {
       console.log(key);
-      if(sensor.name.toLowerCase().indexOf(key.toLowerCase()) !== -1
-      || sensor.model.toLowerCase().indexOf(key.toLowerCase()) !== -1
-      || sensor.type.toLowerCase().indexOf(key.toLowerCase()) !== -1
-      || sensor.unit.toLowerCase().indexOf(key.toLowerCase()) !== -1
-      || sensor.location != null && sensor.location.toLowerCase().indexOf(key.toLowerCase()) !== -1
-      || sensor.description != null && sensor.description.toLowerCase().indexOf(key.toLowerCase()) !== -1    
+      if (sensor.name.toLowerCase().indexOf(key.toLowerCase()) !== -1
+        || sensor.model.toLowerCase().indexOf(key.toLowerCase()) !== -1
+        || sensor.type.toLowerCase().indexOf(key.toLowerCase()) !== -1
+        || sensor.unit.toLowerCase().indexOf(key.toLowerCase()) !== -1
+        || sensor.location != null && sensor.location.toLowerCase().indexOf(key.toLowerCase()) !== -1
+        || sensor.description != null && sensor.description.toLowerCase().indexOf(key.toLowerCase()) !== -1
       ) {
         results.push(sensor);
       }
     }
     this.sensors = results;
-    if(results.length == 0 || !key) {
+    if (results.length == 0 || !key) {
       this.getSensors();
-    }   
+    }
   }
 
   public onOpenModal(sensor: Sensor, mode: string): void {

@@ -32,7 +32,7 @@ export class UserComponent implements OnInit, OnDestroy {
   public fileStatus = new FileUploadStatus();
 
   constructor(private router: Router, private authenticationService: AuthenticationService,
-              private userService: UserService, private notificationService: NotificationService) {}
+    private userService: UserService, private notificationService: NotificationService) { }
 
   ngOnInit(): void {
     this.user = this.authenticationService.getUserFromLocalCache();
@@ -69,7 +69,7 @@ export class UserComponent implements OnInit, OnDestroy {
   }
 
   public onProfileImageChange(fileName: string, profileImage: File): void {
-    this.fileName =  fileName;
+    this.fileName = fileName;
     this.profileImage = profileImage;
   }
 
@@ -94,7 +94,7 @@ export class UserComponent implements OnInit, OnDestroy {
           this.profileImage = null;
         }
       )
-      );
+    );
   }
 
   public onUpdateUser(): void {
@@ -113,7 +113,7 @@ export class UserComponent implements OnInit, OnDestroy {
           this.profileImage = null;
         }
       )
-      );
+    );
   }
 
   public onUpdateCurrentUser(user: User): void {
@@ -135,7 +135,7 @@ export class UserComponent implements OnInit, OnDestroy {
           this.profileImage = null;
         }
       )
-      );
+    );
   }
 
   public onUpdateProfileImage(): void {
@@ -228,10 +228,10 @@ export class UserComponent implements OnInit, OnDestroy {
     const results: User[] = [];
     for (const user of this.userService.getUsersFromLocalCache()) {
       if (user.firstName.toLowerCase().indexOf(searchTerm.toLowerCase()) !== -1 ||
-          user.lastName.toLowerCase().indexOf(searchTerm.toLowerCase()) !== -1 ||
-          user.username.toLowerCase().indexOf(searchTerm.toLowerCase()) !== -1 ||
-          user.userId.toLowerCase().indexOf(searchTerm.toLowerCase()) !== -1) {
-          results.push(user);
+        user.lastName.toLowerCase().indexOf(searchTerm.toLowerCase()) !== -1 ||
+        user.username.toLowerCase().indexOf(searchTerm.toLowerCase()) !== -1 ||
+        user.userId.toLowerCase().indexOf(searchTerm.toLowerCase()) !== -1) {
+        results.push(user);
       }
     }
     this.users = results;
@@ -271,5 +271,4 @@ export class UserComponent implements OnInit, OnDestroy {
   ngOnDestroy(): void {
     this.subscriptions.forEach(sub => sub.unsubscribe());
   }
-
 }
