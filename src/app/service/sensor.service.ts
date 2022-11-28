@@ -7,12 +7,25 @@ import { Sensor } from '../model/sensor';
 
 @Injectable({providedIn: 'root'})
 export class SensorService {
-  private host = environment.apiUrl;
+  private apiServerUrl = environment.apiUrl;
+
 
   constructor(private http: HttpClient) {}
 
   public getSensors(): Observable<Sensor[]> {
-    return this.http.get<Sensor[]>(`${this.host}/sensor/list`);
+    return this.http.get<Sensor[]>(`${this.apiServerUrl}/sensor/list`);
+  }
+
+  public addSensor(sensor: Sensor): Observable<Sensor> {
+    return this.http.post<Sensor>(`${this.apiServerUrl}/sensor`, sensor);
+  }
+  
+  public updateSensor(sensor: Sensor): Observable<Sensor> {
+    return this.http.put<Sensor>(`${this.apiServerUrl}/sensor`, sensor);
+  }
+  
+  public deleteSensor(sensorId: number): Observable<void> {
+    return this.http.delete<void>(`${this.apiServerUrl}/sensor/${sensorId}`);
   }
 
 //   public addUser(formData: FormData): Observable<User> {

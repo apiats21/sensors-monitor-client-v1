@@ -41,6 +41,67 @@ export class SensorComponent implements OnInit {
     );
   }
 
+  public onUpdateSensor(sensor: Sensor): void {
+    this.sensorService.updateSensor(sensor).subscribe(
+      (response: Sensor) => {
+        console.log(response);
+        this.getSensors();
+      },
+      (error: HttpErrorResponse) => {
+        alert(error.message);
+      }
+    );
+  }
+
+  public onAddSensor(addForm: NgForm): void {
+    document.getElementById('add-sensor-form').click();
+    this.sensorService.addSensor(addForm.value).subscribe(
+      (response: Sensor) => {
+        console.log(response);
+        this.getSensors();
+        addForm.reset();
+      },
+      (error: HttpErrorResponse) => {
+        alert(error.message);
+        addForm.reset();
+      }
+    );
+  }
+
+  public onDeleteSensor(sensorId: number): void {
+    this.sensorService.deleteSensor(sensorId).subscribe(
+      (response: void) => {
+        console.log(response);
+        this.getSensors();
+      },
+      (error: HttpErrorResponse) => {
+        alert(error.message);
+      }
+    );
+  }
+
+  public searchSensors(key: string): void { 
+    const results: Sensor[] = [];
+    for(const sensor of this.sensors) {
+      console.log(key);
+      if(sensor.name.toLowerCase().indexOf(key.toLowerCase()) !== -1
+      || sensor.model.toLowerCase().indexOf(key.toLowerCase()) !== -1
+      || sensor.type.toLowerCase().indexOf(key.toLowerCase()) !== -1
+      || sensor.rangeFrom.toString().indexOf(key.toLowerCase()) !== -1
+      || sensor.rangeTo.toString().indexOf(key.toLowerCase()) !== -1
+      || sensor.unit.toLowerCase().indexOf(key.toLowerCase()) !== -1
+      || sensor.location.toLowerCase().indexOf(key.toLowerCase()) !== -1
+      || sensor.description.toLowerCase().indexOf(key.toLowerCase()) !== -1) {
+        results.push(sensor);
+      }
+    }
+    this.sensors = results;
+    if (results.length == 0 || !key) {
+      this.getSensors();
+    }
+  }
+
+
   public onOpenModal(sensor: Sensor, mode: string): void {
     const container = document.getElementById('main-container')
     const button = document.createElement('button');

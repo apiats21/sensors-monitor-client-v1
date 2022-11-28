@@ -1,5 +1,5 @@
 export class Sensor {
-    id: string;
+    id: number;
     name: string;
     model: string;
     type: string;
@@ -10,7 +10,7 @@ export class Sensor {
     description: string;
 
 constructor() {
-    this.id = '';
+    this.id = 0;
     this.name = '';
     this.model = '';
     this.type = '';
