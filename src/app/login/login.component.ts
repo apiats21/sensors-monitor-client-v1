@@ -1,10 +1,10 @@
 import { Component, OnInit, OnDestroy } from '@angular/core';
+import { Router } from '@angular/router';
+import { HttpResponse, HttpErrorResponse } from '@angular/common/http';
+import { Subscription } from 'rxjs';
 import { AuthenticationService } from '../service/authentication.service';
 import { NotificationService } from '../service/notification.service';
-import { Router } from '@angular/router'
 import { User } from '../model/user';
-import { Subscription } from 'rxjs';
-import { HttpErrorResponse, HttpResponse } from '@angular/common/http';
 import { NotificationType } from '../enum/notification-type.enum';
 import { HeaderType } from '../enum/header-type.enum';
 
@@ -18,30 +18,28 @@ export class LoginComponent implements OnInit, OnDestroy {
   private subscriptions: Subscription[] = [];
 
   constructor(private router: Router, private authenticationService: AuthenticationService,
-    private notificationService: NotificationService) { }
+              private notificationService: NotificationService) {}
 
   ngOnInit(): void {
     if (this.authenticationService.isUserLoggedIn()) {
       this.router.navigateByUrl('/user/management');
     } else {
-      this.router.navigateByUrl('/login')
+      this.router.navigateByUrl('/login');
     }
   }
 
   public onLogin(user: User): void {
     this.showLoading = true;
-    console.log(user);
     this.subscriptions.push(
       this.authenticationService.login(user).subscribe(
         (response: HttpResponse<User>) => {
           const token = response.headers.get(HeaderType.JWT_TOKEN);
           this.authenticationService.saveToken(token);
           this.authenticationService.addUserToLocalCache(response.body);
-          this.router.navigateByUrl('/user/management');
+          this.router.navigateByUrl('/sensor/management');
           this.showLoading = false;
         },
         (errorResponse: HttpErrorResponse) => {
-          console.log(errorResponse);
           this.sendErrorNotification(NotificationType.ERROR, errorResponse.error.message);
           this.showLoading = false;
         }
@@ -53,11 +51,12 @@ export class LoginComponent implements OnInit, OnDestroy {
     if (message) {
       this.notificationService.notify(notificationType, message);
     } else {
-      this.notificationService.notify(notificationType, 'An error occured. Please try again.');
+      this.notificationService.notify(notificationType, 'An error occurred. Please try again.');
     }
   }
 
   ngOnDestroy(): void {
     this.subscriptions.forEach(sub => sub.unsubscribe());
   }
+
 }

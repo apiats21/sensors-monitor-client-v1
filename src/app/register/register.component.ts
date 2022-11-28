@@ -1,10 +1,10 @@
 import { Component, OnInit, OnDestroy } from '@angular/core';
+import { Router } from '@angular/router';
+import { HttpErrorResponse } from '@angular/common/http';
+import { Subscription } from 'rxjs';
 import { AuthenticationService } from '../service/authentication.service';
 import { NotificationService } from '../service/notification.service';
-import { Router } from '@angular/router'
 import { User } from '../model/user';
-import { Subscription } from 'rxjs';
-import { HttpErrorResponse } from '@angular/common/http';
 import { NotificationType } from '../enum/notification-type.enum';
 
 @Component({
@@ -17,26 +17,24 @@ export class RegisterComponent implements OnInit, OnDestroy {
   private subscriptions: Subscription[] = [];
 
   constructor(private router: Router, private authenticationService: AuthenticationService,
-    private notificationService: NotificationService) { }
+              private notificationService: NotificationService) {}
 
   ngOnInit(): void {
     if (this.authenticationService.isUserLoggedIn()) {
       this.router.navigateByUrl('/user/management');
-    } 
+    }
   }
 
   public onRegister(user: User): void {
-    console.log(user);
     this.showLoading = true;
     this.subscriptions.push(
       this.authenticationService.register(user).subscribe(
         (response: User) => {
           this.showLoading = false;
-          this.sendNotification(NotificationType.SUCCESS, `New account was created for ${response.firstName}.
-          Please check your email for password to login`);
+          this.sendNotification(NotificationType.SUCCESS, `A new account was created for ${response.firstName}.
+          Please check your email for password to log in.`);
         },
         (errorResponse: HttpErrorResponse) => {
-          console.log(errorResponse);
           this.sendNotification(NotificationType.ERROR, errorResponse.error.message);
           this.showLoading = false;
         }
@@ -48,11 +46,12 @@ export class RegisterComponent implements OnInit, OnDestroy {
     if (message) {
       this.notificationService.notify(notificationType, message);
     } else {
-      this.notificationService.notify(notificationType, 'An error occured. Please try again.');
+      this.notificationService.notify(notificationType, 'An error occurred. Please try again.');
     }
   }
 
   ngOnDestroy(): void {
     this.subscriptions.forEach(sub => sub.unsubscribe());
   }
+
 }
