@@ -25,3 +25,37 @@ Run `ng e2e` to execute the end-to-end tests via a platform of your choice. To u
 ## Further help
 
 To get more help on the Angular CLI use `ng help` or go check out the [Angular CLI Overview and Command Reference](https://angular.io/cli) page.
+
+## SQL
+
+CREATE TABLE `sensor` (
+  `id` bigint NOT NULL,
+  `description` varchar(200) DEFAULT NULL,
+  `location` varchar(40) DEFAULT NULL,
+  `model` varchar(30) DEFAULT NULL,
+  `name` varchar(30) DEFAULT NULL,
+  `range_from` bigint DEFAULT NULL,
+  `range_to` bigint DEFAULT NULL,
+  `type` varchar(30) DEFAULT NULL,
+  `unit` varchar(30) DEFAULT NULL,
+  PRIMARY KEY (`id`)
+)
+
+CREATE TABLE `user` (
+  `id` bigint NOT NULL,
+  `authorities` tinyblob,
+  `email` varchar(255) DEFAULT NULL,
+  `first_name` varchar(255) DEFAULT NULL,
+  `is_active` bit(1) NOT NULL,
+  `is_not_locked` bit(1) NOT NULL,
+  `join_date` datetime(6) DEFAULT NULL,
+  `last_login_date` datetime(6) DEFAULT NULL,
+  `last_login_date_display` datetime(6) DEFAULT NULL,
+  `last_name` varchar(255) DEFAULT NULL,
+  `password` varchar(255) DEFAULT NULL,
+  `profile_image_url` varchar(255) DEFAULT NULL,
+  `role` varchar(255) DEFAULT NULL,
+  `user_id` varchar(255) DEFAULT NULL,
+  `username` varchar(255) DEFAULT NULL,
+  PRIMARY KEY (`id`)
+)
